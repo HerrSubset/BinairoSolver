@@ -230,10 +230,30 @@ local function doubleNumber(row, length)
 	return res
 end
 
+--Checks for 2 identical numbers appearing with an empty space in between of
+--them and places the other number in the empty space. Also uses the 
+--"placeAtIndex" function to to the actual placement.
+local function placeInMiddle(row, length)
+	local res = row
+
+	for i=1, length-2 do
+		if (row[i] == row[i+2]) then
+			if (row[i] == "1") then
+				res = placeAtIndex("0", i+1, res, length)
+			elseif (row[i] == "0") then
+				res = placeAtIndex("1", i+1, res, length)
+			end
+		end
+	end
+
+	return res
+end
+
 
 --function that calls all the heuristics implemented above
 local function solveRow(row, length)
 	row = doubleNumber(row, length)
+	row = placeInMiddle(row,length)
 	row = fillInMissing(row, length)
 
 	return row

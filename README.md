@@ -11,6 +11,7 @@ This project is not intended as anything serious. It's merely a little project t
 
 2. Looking for doubles. If you find two 0's or 1's next to eachother, you know the two cells next to them can be filled in.
 
+3. Filling in the middle one. You can fill in all empty cells surrounded by two of the same numbers.
+
 ## Planned Heuristics
-- Filling in the middle one. You can fill in all empty cells surrounded by two of the same numbers.
 - Don't allow two equal rows. When a certain row or column has all but two cells filled in, try to find a row or column that has all cells filled in in the same way. If you find one, you know how the row or column must be filled in since no two rows or columns can be identical.
