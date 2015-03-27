@@ -157,7 +157,7 @@ end
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
---implementing algorithmes
+--implementing heuristics
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
@@ -210,7 +210,7 @@ end
 
 
 --checks for 2 identical numbers appearing next to eachother and places
---the other number around it, if not filled in already. Calls the 
+--the other number around it, if not filled in already. Calls the
 --"placeAtIndex" function to do the actual placement
 local function doubleNumber(row, length)
 	local res = row
@@ -231,7 +231,7 @@ local function doubleNumber(row, length)
 end
 
 --Checks for 2 identical numbers appearing with an empty space in between of
---them and places the other number in the empty space. Also uses the 
+--them and places the other number in the empty space. Also uses the
 --"placeAtIndex" function to to the actual placement.
 local function placeInMiddle(row, length)
 	local res = row
@@ -260,10 +260,49 @@ local function solveRow(row, length)
 end
 
 
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+--implementing solver loop
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+local function solve(matrix, size)
+	local go = false
+
+	if matrix ~= nil then
+		go = true
+	end
+
+	local openCells = countOpenCells(matrix,size)
+	--call the algorithmes until they don't complete the matrix any further
+	while go do
+
+		for i=1, size do
+			local row = getRowFromMatrix(matrix, i, size)
+			row = solveRow(row,size)
+			matrix = replaceRow(row, i, matrix, size)
+
+			local column = getColumnFromMatrix(matrix,i,size)
+			column = solveRow(column,size)
+			matrix = replaceColumn(column, i, matrix, size)
+
+		end
+
+		--check if going through the heuristics another time makes sense
+		local tmpOpenCells = countOpenCells(matrix,size)
+		if (tmpOpenCells == openCells) or (tmpOpenCells == 0) then
+			go = false
+		else
+			openCells = tmpOpenCells
+		end
+	end
+
+	return matrix
+end
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
---implementing main loop
+--implementing main function
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
@@ -277,33 +316,7 @@ local matrix = buildMatrix(size)
 print("\nEntered:")
 printMatrix(matrix, size)
 
-if matrix ~= nil then
-	go = true
-end
-
-local openCells = countOpenCells(matrix,size)
---call the algorithmes until they don't complete the matrix any further
-while go do
-
-	for i=1, size do
-		local row = getRowFromMatrix(matrix, i, size)
-		row = solveRow(row,size)
-		matrix = replaceRow(row, i, matrix, size)
-
-		local column = getColumnFromMatrix(matrix,i,size)
-		column = solveRow(column,size)
-		matrix = replaceColumn(column, i, matrix, size)
-
-	end
-
-	--check if going through the algorithmes another time makes sense
-	local tmpOpenCells = countOpenCells(matrix,size)
-	if (tmpOpenCells == openCells) or (tmpOpenCells == 0) then
-		go = false
-	else
-		openCells = tmpOpenCells
-	end
-end
+solve(matrix,size)
 
 print("\nEnd result:")
 printMatrix(matrix, size)
