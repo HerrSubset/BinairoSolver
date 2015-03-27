@@ -266,6 +266,7 @@ end
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
+--the loop that will call the heuristics to try and fill in the binairo
 local function solve(matrix, size)
 	local go = false
 
@@ -273,6 +274,7 @@ local function solve(matrix, size)
 		go = true
 	end
 
+	--count the amount of open cells to see if there was improvement later on
 	local openCells = countOpenCells(matrix,size)
 	--call the algorithmes until they don't complete the matrix any further
 	while go do
