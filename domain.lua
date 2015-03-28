@@ -82,7 +82,7 @@ end
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
---heuristics
+--single line heuristics
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
@@ -188,6 +188,14 @@ end
 
 
 
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+--line comparison heuristics
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
+
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -195,17 +203,17 @@ end
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
---the loop that will call the heuristics to try and fill in the binairo
-function domain.solve(matrix, size)
+--keep looping through single line heuristics until
+--there's no further improvement
+local function callSingleLineHeuristics(matrix, size)
 	local go = false
 
 	if matrix ~= nil then
 		go = true
 	end
 
-	--count the amount of open cells to see if there was improvement later on
-	local openCells = countOpenCells(matrix,size)
-	--call the algorithmes until they don't complete the matrix any further
+	local openCells = countOpenCells(matrix, size)
+
 	while go do
 
 		for i=1, size do
@@ -225,6 +233,37 @@ function domain.solve(matrix, size)
 			go = false
 		else
 			openCells = tmpOpenCells
+		end
+	end
+
+	return matrix
+end
+
+
+--go through all line comparison heuristics once
+local function callLineComparisonHeuristics(matrix,size)
+	local res = matrix
+
+
+
+	return res
+end
+
+
+--the loop that will call the heuristics to try and fill in the binairo
+function domain.solve(matrix, size)
+	local go = true
+
+	--call the algorithmes until they don't complete the matrix any further
+	while go do
+		matrix = callSingleLineHeuristics(matrix, size)
+		tmpOpenCells = countOpenCells(matrix,size)
+
+		matrix = callLineComparisonHeuristics(matrix, size)
+		tmp2OpenCells = countOpenCells(matrix,size)
+
+		if tmp2OpenCells == tmpOpenCells then
+			go = false
 		end
 	end
 
